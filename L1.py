@@ -33,19 +33,24 @@ print(data.sort_values(by=['总分'], ascending=False))
 df = pd.read_csv('.\car_data_analyze\car_complain.csv', encoding='utf-8')
 df = df.drop('problem', axis=1).join(df.problem.str.get_dummies(','))
 #df.to_csv('.\output.csv')
-print(df)
+#print(df)
 def f(x):
     x = x.replace('一汽-大众', '一汽大众')
     return x
 df['brand'] = df['brand'].apply(f)
+#print(df)
 result = df.groupby(['brand'])['id'].agg(['count'])
 result2 = df.groupby(['car_model'])['id'].agg(['count'])
 print('品牌投诉总数')
 print(result)
 print('车型投诉总数')
 print(result2)
-#车型平均值不太清楚，只做了品牌+车型的聚合
+#各品牌+车型的投诉数量
 result3 = df.groupby(['brand','car_model'])['id'].agg(['count'])
-print(result3)
+#print(result3)
+#品牌平均车型投诉排行，从高到低
+result4 = result3.groupby(['brand'])['count'].mean().sort_values(ascending=False)
+print('品牌平均车型投诉排行，从高到低')
+print(result4)
 
 
